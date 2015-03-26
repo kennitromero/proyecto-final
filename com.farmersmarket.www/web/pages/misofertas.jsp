@@ -247,7 +247,8 @@
                                         </table>
 
                                         <div class="col-sm-4 pull-left">
-                                            <h4><span class="label label-success">
+                                            <h4>
+                                                <span class="label label-info">
                                                     <%
                                                         if (of.getEstado() == 1) {
                                                             out.print("Publicada <i class='fa fa-check'></i>");
@@ -317,11 +318,17 @@
                                                 }
                                             %>                                            
 
-                                            <!-- link para modal para mostrar novedades -->
+                                            <!-- link para eliminar la oferta -->
                                             <a href="../GestionOfertas?op=eliofer&idOferta=<%= of.getIdOferta()%>">
-                                                <i class="fa fa-remove pull-right"> </i> <span class="pull-right text-danger">Eliminar Oferta</span>
+                                                <i class="fa fa-remove pull-right"> </i> <span class="pull-right text-danger">&nbsp;&nbsp; Eliminar Oferta</span>
                                             </a>                                                                                        
-                                            <!-- Fin de promociones -->
+                                            <!-- Fin link para eliminar la oferta -->
+                                            
+                                            <!-- link para modal para editar la oferta -->
+                                            <a href="../GestionOfertas?op=eliofer&idOferta=<%= of.getIdOferta()%>">
+                                                <i class="fa fa-pencil pull-right"> </i> <span class="pull-right text-primary">Editar Oferta</span>
+                                            </a>                                                                                        
+                                            <!-- Fin link para modal para editar la oferta -->
                                             &nbsp;
                                         </h3>
                                     </div>

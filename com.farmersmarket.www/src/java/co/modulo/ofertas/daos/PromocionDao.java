@@ -37,4 +37,27 @@ public class PromocionDao {
         }
         return promoOfer;
     }
+    
+    public String updatePromocion(PromocionDto ediPromocion, Connection unaConexion) {
+        try {
+            //1-Descripcion | 2-Detalle | 3-idPromocion
+            String sqlInsert = "UPDATE promociones SET Descripcion = ?, Detalle = ? WHERE idPromocion = ?";
+            pstm = unaConexion.prepareStatement(sqlInsert);
+
+            pstm.setString(1, ediPromocion.getDescripcion());
+            pstm.setFloat(2, ediPromocion.getDetalle());
+            pstm.setInt(3, ediPromocion.getIdPromocion());
+
+            rtdo = pstm.executeUpdate();
+
+            if (rtdo != 0) {
+                mensaje = "ok";
+            } else {
+                mensaje = "okno";
+            }
+        } catch (SQLException sqle) {
+            mensaje = "Error, detalle " + sqle.getMessage();
+        }
+        return mensaje;
+    }
 }

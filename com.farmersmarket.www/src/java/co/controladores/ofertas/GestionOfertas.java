@@ -43,7 +43,7 @@ public class GestionOfertas extends HttpServlet {
 
         if (request.getParameter("opEnviar") != null && request.getParameter("opEnviar").equals("Publicar")) {
             int idProductoAso = Integer.parseInt(request.getParameter("idProductoAsociado"));
-
+            //Validamos que el producto asociado no se haya ofertado y que la oferta esté activa
             if (faOfer.validarProductoOfertado(idProductoAso)) {
                 float precioVenta = Float.parseFloat(request.getParameter("opPrecioVenta"));
                 float cantidad = Float.parseFloat(request.getParameter("opCantidad"));
@@ -83,28 +83,6 @@ public class GestionOfertas extends HttpServlet {
                 } else {
                     response.sendRedirect("pages/misproductos.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡No tenes más de 5 ofertas activas!</strong> Por politicas del sitio, sólo puede publicar y tener 5 ofertas activas.&tipoAlert=warning");
                 }
-            } else if (request.getParameter("opaEnviar") != null && request.getParameter("opaEnviar").equals("Agregar")) {
-                int idOferta = Integer.parseInt(request.getParameter("idOferta"));
-                String descripcion = request.getParameter("opaDescripcionPromocion");
-                float detalle = Float.parseFloat(request.getParameter("opaDetalle"));
-
-                PromocionDto nuPromo = new PromocionDto();
-                nuPromo.setDescripcion(descripcion);
-                nuPromo.setDetalle(detalle);
-
-                salida = faOfer.agregarPromocion(nuPromo, idOferta);
-
-                if (salida.equals("ok")) {
-                    response.sendRedirect("pages/misofertas.jsp?msg=<strong>¡Se agregó la promoción! <i class='glyphicon glyphicon-ok'></i></strong> Su promoción se agregó correctamente.&tipoAlert=success");
-                } else if (salida.equals("okno")) {
-                    //Respuesta desconocida, no se realizó
-                    response.sendRedirect("pages/misofertas.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Algo salió mal!</strong> Por favor intentelo de nuevo.&tipoAlert=warning");
-                } else {
-                    //Respuesta conocida, no se realizó
-                    response.sendRedirect("pages/misproductos.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Ocurrió un error!</strong> Detalle: " + salida + "&tipoAlert=danger");
-                }
-            } else {
-                response.sendRedirect("pages/misproductos.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡No se pudo publicar!</strong> No puede publicar un producto dos veces.&tipoAlert=warning");
             }
         } else if (request.getParameter("op") != null && request.getParameter("op").equals("eliofer")) {
             int idOferta = Integer.parseInt(request.getParameter("idOferta"));
@@ -119,6 +97,28 @@ public class GestionOfertas extends HttpServlet {
                 //Respuesta conocida, no se realizó
                 response.sendRedirect("pages/misproductos.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Ocurrió un error!</strong> Detalle: " + salida + "&tipoAlert=danger");
             }
+        } else if (request.getParameter("opaEnviar") != null && request.getParameter("opaEnviar").equals("Agregar")) {
+            int idOferta = Integer.parseInt(request.getParameter("idOferta"));
+            String descripcion = request.getParameter("opaDescripcionPromocion");
+            float detalle = Float.parseFloat(request.getParameter("opaDetalle"));
+
+            PromocionDto nuPromo = new PromocionDto();
+            nuPromo.setDescripcion(descripcion);
+            nuPromo.setDetalle(detalle);
+
+            salida = faOfer.agregarPromocion(nuPromo, idOferta);
+
+            if (salida.equals("ok")) {
+                response.sendRedirect("pages/misofertas.jsp?msg=<strong>¡Se agregó la promoción! <i class='glyphicon glyphicon-ok'></i></strong> Su promoción se agregó correctamente.&tipoAlert=success");
+            } else if (salida.equals("okno")) {
+                //Respuesta desconocida, no se realizó
+                response.sendRedirect("pages/misofertas.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Algo salió mal!</strong> Por favor intentelo de nuevo.&tipoAlert=warning");
+            } else {
+                //Respuesta conocida, no se realizó
+                response.sendRedirect("pages/misproductos.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Ocurrió un error!</strong> Detalle: " + salida + "&tipoAlert=danger");
+            }
+        } else {
+            response.sendRedirect("pages/misproductos.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡No se pudo publicar!</strong> No puede publicar un producto dos veces.&tipoAlert=warning");
         }
     }
 

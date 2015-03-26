@@ -67,6 +67,10 @@ public class FOferta {
     public String agregarPromocion(PromocionDto agPromo, int idOferta) {
         return ofDao.insertPromocion(agPromo, idOferta, miConexion);
     }
+    
+    public String publicarOfertaSinPromocion(OfertaDto nuevaOferta) {
+        return ofDao.insertOferta(nuevaOferta, miConexion);
+    }
 
     //Consultas Por Un Criterio (ProductosAsociados)
     public int obtenerIdPaPorIds(long idProductor, int idProducto) {
@@ -140,6 +144,15 @@ public class FOferta {
 
     public String elimiarOferta(int idOferta) {
         return ofDao.deleteOferta(idOferta, miConexion);
+    }
+    
+    //Actualizaciones de registros
+    public String actualizarOferta(OfertaDto ediOferta) {
+        return ofDao.updateOferta(ediOferta, miConexion);
+    }
+    
+    public String actualizarPromocion(PromocionDto ediPromo) {
+        return proDao.updatePromocion(ediPromo, miConexion);
     }
 
     //Utilidades

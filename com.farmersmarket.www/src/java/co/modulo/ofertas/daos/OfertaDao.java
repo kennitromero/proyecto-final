@@ -124,17 +124,40 @@ public class OfertaDao {
         return mensaje;
     }
 
-    public String insertOferta(OfertaDto nuevoOferta, int idProductoAsociado, Connection unaConexion) {
+    public String insertOferta(OfertaDto nuevaOferta, Connection unaConexion) {
         try {
-            //1- idProductoAsociado 2- PrecioVenta 3- Cantidad 4- idPromocion 5- idEstado
+            //1-idProductoAsociado | 2-PrecioVenta | 3-Cantidad | 4-idPromocion | 5-idEstado
             String sqlInsert = "INSERT INTO ofertas VALUES (null, ?, ?, now(), adddate(now(),8), ?, ?, ?)";
             pstm = unaConexion.prepareStatement(sqlInsert);
 
-            pstm.setInt(1, idProductoAsociado);
-            pstm.setFloat(2, nuevoOferta.getPrecioCompra());
-            pstm.setFloat(3, nuevoOferta.getCantidadDisponible());
-            pstm.setInt(4, 1);
-            pstm.setInt(5, nuevoOferta.getEstado());
+            pstm.setInt(1, nuevaOferta.getIdProductoAsociado());
+            pstm.setFloat(2, nuevaOferta.getPrecioCompra());
+            pstm.setFloat(3, nuevaOferta.getCantidadDisponible());
+            pstm.setInt(4, 500);
+            pstm.setInt(5, nuevaOferta.getEstado());
+
+            rtdo = pstm.executeUpdate();
+
+            if (rtdo != 0) {
+                mensaje = "ok";
+            } else {
+                mensaje = "okno";
+            }
+        } catch (SQLException sqle) {
+            mensaje = "Error, detalle " + sqle.getMessage();
+        }
+        return mensaje;
+    }
+    
+    public String updateOferta(OfertaDto ediOferta, Connection unaConexion) {
+        try {
+            //1-PrecioVente | 2-Cantidad | 3-idOferta
+            String sqlInsert = "UPDATE ofertas SET PrecioVente = ? Cantidad = ? WHERE idOferta = ?";
+            pstm = unaConexion.prepareStatement(sqlInsert);
+
+            pstm.setFloat(1, ediOferta.getPrecioCompra());
+            pstm.setFloat(2, ediOferta.getCantidadDisponible());
+            pstm.setInt(3, ediOferta.getIdOferta());
 
             rtdo = pstm.executeUpdate();
 
