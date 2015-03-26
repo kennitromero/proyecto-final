@@ -393,7 +393,7 @@
                                                         <span class="input-group-addon">.00 de Kilo</span>
                                                     </div>
                                                 </div>
-                                            </div>                                                                                      
+                                            </div>
 
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">                                                
                                                 <div class="panel panel-default">

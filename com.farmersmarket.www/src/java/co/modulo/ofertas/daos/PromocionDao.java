@@ -38,6 +38,26 @@ public class PromocionDao {
         return promoOfer;
     }
     
+    public PromocionDto obtenerPromocionId(int idPromocion, Connection unaConexion) {
+        PromocionDto promoOfer = null;
+        sqlTemp = "SELECT idPromocion, Descripcion, Detalle FROM promociones WHERE idPromocion = ?";
+        try {
+            pstm = unaConexion.prepareStatement(sqlTemp);
+            pstm.setLong(1, idPromocion);
+            rs = pstm.executeQuery();
+
+            while (rs.next()) {
+                promoOfer = new PromocionDto();
+                promoOfer.setIdPromocion(rs.getInt("idPromocion"));
+                promoOfer.setDescripcion(rs.getString("Descripcion"));
+                promoOfer.setDetalle(rs.getFloat("Detalle"));                
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error, detalle: " + ex.getMessage());
+        }
+        return promoOfer;
+    }
+    
     public String updatePromocion(PromocionDto ediPromocion, Connection unaConexion) {
         try {
             //1-Descripcion | 2-Detalle | 3-idPromocion

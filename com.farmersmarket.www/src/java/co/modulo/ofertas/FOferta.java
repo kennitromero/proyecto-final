@@ -98,6 +98,10 @@ public class FOferta {
     public int obtenerCuposOferta(long idProductor) {
         return ofDao.obtenerCuposParaOfertar(idProductor, miConexion);
     }
+    
+    public OfertaDto obtenerOfertaPorId(int idOferta) {
+        return ofDao.obtenerOfertaPorId(idOferta, miConexion);
+    }
 
     //Consultas Por Un Criterio (Produtos)
     public List obtenerTodosLosProductos() {
@@ -130,6 +134,11 @@ public class FOferta {
 
     public boolean validarProductoOfertado(int idProductoAso) {
         return paDao.validarProductoOfertado(idProductoAso, miConexion);
+    }
+    
+    //Consults Por Criterio (Promocion)
+    public PromocionDto obtenerPromocionPorId(int idPromocion) {
+        return proDao.obtenerPromocionId(idPromocion, miConexion);
     }
 
     //Consultas Por Un Criterio (Categorias)

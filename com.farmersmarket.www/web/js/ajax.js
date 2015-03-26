@@ -96,3 +96,58 @@ function resultadoFormOfertar() {
 /* 
  *  Fin de cargar Ciudades en Pos de un Departamento
  */
+
+
+
+var xmlHttp;
+function getPromocion(idPromocion) {
+
+    if (window.XMLHttpRequest) {
+        xmlHttp = new XMLHttpRequest();
+    }
+    else if (window.ActiveXObject) {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+    } else {
+        alert("El navegador no soporta Ajax!");
+        return;
+    }
+
+    var url = "../ajax/cargarPromocion.jsp?idPromocion=" + idPromocion;
+    xmlHttp.onreadystatechange = resultadoPromocion;
+    xmlHttp.open("GET", url, true);
+    xmlHttp.send(null);
+
+}
+
+function resultadoPromocion() {
+    if (xmlHttp.readyState === 4) {
+        document.getElementById("formActualizarPromo").innerHTML = xmlHttp.responseText;
+    }
+}
+
+
+var xmlHttp;
+function getOferta(idOferta, nombreProducto) {
+
+    if (window.XMLHttpRequest) {
+        xmlHttp = new XMLHttpRequest();
+    }
+    else if (window.ActiveXObject) {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+    } else {
+        alert("El navegador no soporta Ajax!");
+        return;
+    }
+
+    var url = "../ajax/cargarOferta.jsp?idOferta=" + idOferta +"&nombreCategoriaProducto=" + nombreProducto;
+    xmlHttp.onreadystatechange = resultadoOferta;
+    xmlHttp.open("GET", url, true);
+    xmlHttp.send(null);
+
+}
+
+function resultadoOferta() {
+    if (xmlHttp.readyState === 4) {
+        document.getElementById("formActualizarOferta").innerHTML = xmlHttp.responseText;
+    }
+}

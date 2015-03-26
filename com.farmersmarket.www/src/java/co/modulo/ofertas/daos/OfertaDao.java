@@ -26,6 +26,31 @@ public class OfertaDao {
     String mensaje = "";
     String sqlTemp = "";
     boolean poder = false;
+    
+    public OfertaDto obtenerOfertaPorId(int idOferta, Connection unaConexion) {
+        OfertaDto temp = new OfertaDto();
+        sqlTemp = "SELECT idOferta, idProductoAsociado, PrecioVente, FechaInicio, FechaFin, Cantidad, idPromocion, idEstadoOferta FROM ofertas "
+                + "WHERE idOferta = ?";
+        try {
+            pstm = unaConexion.prepareStatement(sqlTemp);
+            pstm.setLong(1, idOferta);
+            rs = pstm.executeQuery();
+            
+            while (rs.next()) {                
+                temp.setIdOferta(rs.getInt("idOferta"));
+                temp.setIdProductoAsociado(rs.getInt("idProductoAsociado"));
+                temp.setPrecioCompra(rs.getFloat("PrecioVente"));
+                temp.setFechaInicio(rs.getString("FechaInicio"));
+                temp.setFechaFin(rs.getString("FechaFin"));
+                temp.setCantidadDisponible(rs.getFloat("Cantidad"));
+                temp.setIdPromocion(rs.getInt("idPromocion"));
+                temp.setEstado(rs.getInt("idEstadoOferta"));                
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error, detalle: " + ex.getMessage());
+        }
+        return temp;
+    }
 
     public List obtenerOfertasPorProductor(long idProductor, Connection unaConexion) {
         ArrayList<OfertaDto> misOfertas = null;
@@ -152,7 +177,7 @@ public class OfertaDao {
     public String updateOferta(OfertaDto ediOferta, Connection unaConexion) {
         try {
             //1-PrecioVente | 2-Cantidad | 3-idOferta
-            String sqlInsert = "UPDATE ofertas SET PrecioVente = ? Cantidad = ? WHERE idOferta = ?";
+            String sqlInsert = "UPDATE ofertas SET PrecioVente = ?, Cantidad = ? WHERE idOferta = ?";
             pstm = unaConexion.prepareStatement(sqlInsert);
 
             pstm.setFloat(1, ediOferta.getPrecioCompra());

@@ -311,7 +311,7 @@
                                             <%
                                             } else {
                                             %>
-                                            <a href="#">
+                                            <a href="#" onclick="getPromocion(<%= tempPromo.getIdPromocion()%>)" data-toggle="modal" data-target="#modalActualizarPromocion">
                                                 <i class="fa fa-plus pull-left"></i> <span class="pull-left text-success">Editar Promoción</span>
                                             </a>
                                             <%
@@ -323,9 +323,9 @@
                                                 <i class="fa fa-remove pull-right"> </i> <span class="pull-right text-danger">&nbsp;&nbsp; Eliminar Oferta</span>
                                             </a>                                                                                        
                                             <!-- Fin link para eliminar la oferta -->
-                                            
+
                                             <!-- link para modal para editar la oferta -->
-                                            <a href="../GestionOfertas?op=eliofer&idOferta=<%= of.getIdOferta()%>">
+                                            <a href=#" onclick="getOferta(<%= of.getIdOferta()%>, '<%= faOfer.obNombreCategoriaPorIDPA(of.getIdProductoAsociado())%>')" data-toggle="modal" data-target="#modalActualizarOferta">
                                                 <i class="fa fa-pencil pull-right"> </i> <span class="pull-right text-primary">Editar Oferta</span>
                                             </a>                                                                                        
                                             <!-- Fin link para modal para editar la oferta -->
@@ -419,53 +419,99 @@
                         </div>
                         <!-- Fin de Cambiar Contraseña -->
 
-                        <!-- Formulario de Contáctenos -->
-                        <div>
-                            <div class="modal fade" id="modalContactenos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            <h4 class="modal-title text-center" id="myModalLabel">Contáctenos | Farmer's Market</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form class="form-horizontal" method="POST" action="../GestionUsuarios" id="formContactenos">
-                                                <div class="form-group">
-                                                    <label for="mcNombre" class="col-sm-2 control-label">Nombre</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" name="mcNombre"
-                                                               id="mcNombre" placeholder="Ingrese su nombre">
-                                                    </div>
+                        <!-- Formulario de Contáctenos -->                        
+                        <div class="modal fade" id="modalContactenos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title text-center" id="myModalLabel">Contáctenos | Farmer's Market</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="form-horizontal" method="POST" action="../GestionUsuarios" id="formContactenos">
+                                            <div class="form-group">
+                                                <label for="mcNombre" class="col-sm-2 control-label">Nombre</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" name="mcNombre"
+                                                           id="mcNombre" placeholder="Ingrese su nombre">
                                                 </div>
+                                            </div>
 
-                                                <div class="form-group">
-                                                    <label for="mcCorreo" class="col-sm-2 control-label">Correo</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" name="mcCorreo"
-                                                               id="mcCorreo" placeholder="Ingrese su correo electrónico">
-                                                    </div>
+                                            <div class="form-group">
+                                                <label for="mcCorreo" class="col-sm-2 control-label">Correo</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" name="mcCorreo"
+                                                           id="mcCorreo" placeholder="Ingrese su correo electrónico">
                                                 </div>
+                                            </div>
 
-                                                <div class="form-group">
-                                                    <label for="inputPassword3" class="col-sm-2 control-label">Mensaje</label>
-                                                    <div class="col-sm-10">
-                                                        <textarea name="mcMensaje" class="form-control" rows="4" placeholder="Ingrese su mensaje para la compañía Farmer's Market"></textarea>
-                                                    </div>
+                                            <div class="form-group">
+                                                <label for="inputPassword3" class="col-sm-2 control-label">Mensaje</label>
+                                                <div class="col-sm-10">
+                                                    <textarea name="mcMensaje" class="form-control" rows="4" placeholder="Ingrese su mensaje para la compañía Farmer's Market"></textarea>
                                                 </div>
+                                            </div>
 
-                                                <input hidden="true" name="mcViene" value="misOfertas">
-                                                <input type="hidden" name="mcEnviar" value="ok">
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-                                            <button type="button" class="btn btn-success" onclick="enviarFormulario('formContactenos')">Enviar Mensaje</button>
-                                        </div>
+                                            <input hidden="true" name="mcViene" value="misOfertas">
+                                            <input type="hidden" name="mcEnviar" value="ok">
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                                        <button type="button" class="btn btn-success" onclick="enviarFormulario('formContactenos')">Enviar Mensaje</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- Fin de formulario de Contáctenos -->
+
+
+                        <!-- Ventana modal para actualizar Oferta-->
+                        <div class="modal fade bs-example-modal-sm" id="modalActualizarOferta" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-sm">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title text-center" id="myModalLabel">Actualizar Oferta</h4>
+                                    </div>
+                                    <div class="modal-body" >
+                                        <form method="POST" action="../GestionOfertas" id="formActualizarOferta">
+                                            
+                                            
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-primary" onclick="enviarFormulario('formActualizarOferta');">Actualizar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin de ventana modal para actualizar Oferta-->
+
+
+                        <!-- Ventana Mododal para actualizar Promocion -->
+                        <div class="modal fade bs-example-modal-sm" id="modalActualizarPromocion" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-sm">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title text-center" id="myModalLabel">Actualizar Promoción</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="POST" action="../GestionOfertas" id="formActualizarPromo">
+
+                                        </form>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-primary" onclick="enviarFormulario('formActualizarPromo');">Actualizar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin de Ventana Modal para actualizar promoción -->
                     </div>
                 </div>
                 <!-- Contenedor de Segundo-->
