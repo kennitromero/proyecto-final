@@ -24,6 +24,10 @@
         <servlet-name>GestionOfertas</servlet-name>
         <servlet-class>co.controladores.ofertas.GestionOfertas</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GestionPedidos</servlet-name>
+        <servlet-class>co.controladores.pedidos.GestionPedidos</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Conexion</servlet-name>
         <url-pattern>/Conexion</url-pattern>
@@ -47,6 +51,10 @@
     <servlet-mapping>
         <servlet-name>GestionOfertas</servlet-name>
         <url-pattern>/GestionOfertas</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GestionPedidos</servlet-name>
+        <url-pattern>/GestionPedidos</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

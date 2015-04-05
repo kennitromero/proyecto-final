@@ -17,8 +17,7 @@
         <title>Oferta</title>
     </head>
     <body>
-        <%
-            OfertaDto oDto;
+        <%            
             ProductoDto pDto;
 
             FOferta faOfer = new FOferta();

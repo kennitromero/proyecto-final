@@ -22,7 +22,7 @@ public class UsuarioDao {
 
     PreparedStatement pstm = null;
     ResultSet rs = null;
-    String mensaje = "";    
+    String mensaje = "";
     int rtdo = 0;
     String sqlTemp = "";
 
@@ -87,25 +87,17 @@ public class UsuarioDao {
         return usuarios;
     }
 
-    public String actualizarUsuario(UsuarioDto usuarioActualizado, Connection unaConexion) {
+    public String actualizarUsuarioParaUsuario(UsuarioDto usuarioActualizado, Connection unaConexion) {
         try {
-            String sqlInsert = "UPDATE `usuarios` SET `idUsuario` = ? `Nombres` = ?, "
-                    + "`Apellidos` = ?, `Clave` = ?, `Correo` = ?, `FechaNacimiento` = ?, "
-                    + "`Direccion` = ?, `idCiudad` = ?, `Imagen` = ?, "
-                    + "`idEstado` = ? WHERE `idUsuario` = ?";
+            String sqlInsert = "UPDATE `usuarios` SET `Nombres` = ?, "
+                    + "`Apellidos` = ?, `Correo` = ?, `Direccion` = ? WHERE `idUsuario` = ?";
             pstm = unaConexion.prepareStatement(sqlInsert);
 
-            pstm.setLong(1, usuarioActualizado.getIdUsuario());
-            pstm.setString(2, usuarioActualizado.getNombres());
-            pstm.setString(3, usuarioActualizado.getApellidos());
-            pstm.setString(4, usuarioActualizado.getClave());
-            pstm.setString(5, usuarioActualizado.getCorreo());
-            pstm.setString(6, usuarioActualizado.getFechaNacimiento());
-            pstm.setString(7, usuarioActualizado.getDireccion());
-            pstm.setInt(8, usuarioActualizado.getIdCiudad());
-            pstm.setString(9, usuarioActualizado.getImagen());
-            pstm.setInt(10, usuarioActualizado.getEstado());
-            pstm.setLong(11, usuarioActualizado.getIdUsuario());
+            pstm.setString(1, usuarioActualizado.getNombres());
+            pstm.setString(2, usuarioActualizado.getApellidos());
+            pstm.setString(3, usuarioActualizado.getCorreo());
+            pstm.setString(4, usuarioActualizado.getDireccion());
+            pstm.setLong(5, usuarioActualizado.getIdUsuario());
 
             rtdo = pstm.executeUpdate();
 
@@ -116,6 +108,22 @@ public class UsuarioDao {
             }
         } catch (SQLException sqle) {
             mensaje = "Error, detalle " + sqle.getMessage();
+        }
+        return mensaje;
+    }
+
+    public String obtenerNombresPorId(long idUsuario, Connection unaConexion) {
+        sqlTemp = "SELECT concat(Nombres, ' ', Apellidos) as Salida FROM usuarios WHERE idUsuario = ?";
+        try {
+            pstm = unaConexion.prepareStatement(sqlTemp);
+            pstm.setLong(1, idUsuario);
+            rs = pstm.executeQuery();
+
+            while (rs.next()) {
+                mensaje = rs.getString("Salida");
+            }
+        } catch (SQLException ex) {
+            mensaje = "Error, detalle: " + ex.getMessage();
         }
         return mensaje;
     }
@@ -269,6 +277,64 @@ public class UsuarioDao {
             }
         } catch (SQLException ex) {
             System.out.println("Error, detalle: " + ex.getMessage());
+        }
+        return mensaje;
+    }
+    
+    public String obtenerCorreoProductorPorPedido(int idPedido, Connection unaConexion) {
+        sqlTemp = "SELECT Correo FROM usuarios as u "
+                + "JOIN productosasociados as pa ON (u.idUsuario = pa.idProductor) "
+                + "JOIN ofertas as o ON (o.idProductoAsociado = pa.idProductoAsociado) "
+                + "JOIN pedidos as pe ON (pe.idOferta = o.idOferta) "
+                + "WHERE pe.idPedido = ?";
+        try {
+            pstm = unaConexion.prepareStatement(sqlTemp);
+            pstm.setLong(1, idPedido);
+            rs = pstm.executeQuery();
+
+            while (rs.next()) {
+                mensaje = rs.getString("Correo");
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error, detalle: " + ex.getMessage());
+        }
+        return mensaje;
+    }
+
+    public String obtenerNombrePorProductoAsociado(int idProductoAsociado, Connection unaConexion) {
+        sqlTemp = "SELECT concat(u.Nombres, ' ', u.Apellidos) as Salida FROM usuarios as u "
+                + "JOIN productosasociados as pa on (pa.idProductor = u.idUsuario) "
+                + "JOIN ofertas as o ON (o.idProductoAsociado = pa.idProductoAsociado) "
+                + "WHERE o.idProductoAsociado = ?";
+        try {
+            pstm = unaConexion.prepareStatement(sqlTemp);
+            pstm.setInt(1, idProductoAsociado);
+            rs = pstm.executeQuery();
+
+            while (rs.next()) {
+                mensaje = rs.getString("Salida");
+            }
+        } catch (SQLException ex) {
+            mensaje = "Error, detalle: " + ex.getMessage();
+        }
+        return mensaje;
+    }    
+    
+    public String obtenerNombrePorOferta(int idOferta, Connection unaConexion) {
+        sqlTemp = "SELECT concat(u.Nombres, ' ', u.Apellidos) as Salida FROM usuarios as u "
+                + "JOIN productosasociados as pa on (pa.idProductor = u.idUsuario) "
+                + "JOIN ofertas as o ON (o.idProductoAsociado = pa.idProductoAsociado) "
+                + "WHERE o.idOferta = ?";
+        try {
+            pstm = unaConexion.prepareStatement(sqlTemp);
+            pstm.setInt(1, idOferta);
+            rs = pstm.executeQuery();
+
+            while (rs.next()) {
+                mensaje = rs.getString("Salida");
+            }
+        } catch (SQLException ex) {
+            mensaje = "Error, detalle: " + ex.getMessage();
         }
         return mensaje;
     }

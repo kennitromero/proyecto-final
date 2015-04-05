@@ -1,7 +1,5 @@
 package co.modulo.ofertas.daos;
 
-import co.utilidades.Conexion;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,7 +20,7 @@ public class ProductoAsociadoDao {
 
     public String insertProductoAsociado(long idProductor, int[] idProducto, Connection unaConexion) {
         try {
-            String sqlInsert = "INSERT INTO `productosasociados`(`idProductor`, `idProducto`, `idProductoAsociado`) VALUES (?, ?, null)";
+            String sqlInsert = "INSERT INTO productosasociados VALUES (?, ?, null, now(), null, 1)";
             pstm = unaConexion.prepareStatement(sqlInsert);
 
             for (int i = 0; i < idProducto.length; i++) {
@@ -64,7 +62,7 @@ public class ProductoAsociadoDao {
     //Contar el número de productos que tiene un usuario
     public String obtenerNumeroProductosAsociados(long idProductor, Connection unaConexion) {
         try {
-            String sqlInsert = "SELECT count(idProducto) as Cantidad FROM productosasociados WHERE idProductor= ?";
+            String sqlInsert = "SELECT count(idProducto) as Cantidad FROM productosasociados WHERE idProductor= ? AND Estado = 1";
             pstm = unaConexion.prepareStatement(sqlInsert);
             pstm.setLong(1, idProductor);
             rs = pstm.executeQuery();
@@ -82,7 +80,7 @@ public class ProductoAsociadoDao {
     //Validar producto ya asociado
     public boolean validarYaProdAso(long idProductor, int idProducto, Connection unaConexion) {
         try {
-            String sqlInsert = "SELECT idProductoAsociado FROM productosasociados WHERE idProductor = ? AND idProducto = ?";
+            String sqlInsert = "SELECT idProductoAsociado FROM productosasociados WHERE idProductor = ? AND idProducto = ? AND Estado = 2";
             pstm = unaConexion.prepareStatement(sqlInsert);
             pstm.setLong(1, idProductor);
             pstm.setInt(2, idProducto);
@@ -123,7 +121,7 @@ public class ProductoAsociadoDao {
     //Validar producto ya asociado
     public boolean validarProductoOfertado(int idProductoAsociado, Connection unaConexion) {
         try {
-            String sqlInsert = "SELECT idProductoAsociado FROM ofertas WHERE idProductoAsociado = ?";
+            String sqlInsert = "SELECT idProductoAsociado FROM ofertas WHERE idProductoAsociado = ? AND idEstadoOferta = 1";
             pstm = unaConexion.prepareStatement(sqlInsert);
             pstm.setLong(1, idProductoAsociado);
             rs = pstm.executeQuery();
@@ -144,7 +142,7 @@ public class ProductoAsociadoDao {
     //Mostrar el número disponible de cupos para asociar
     public String obtenerCuposDisponibles(long idProductor, Connection unaConexion) {
         try {
-            String sqlInsert = "SELECT count(idProducto) as Cantidad FROM productosasociados WHERE idProductor= ?";
+            String sqlInsert = "SELECT count(idProducto) as Cantidad FROM productosasociados WHERE idProductor= ? AND Estado = 1";
             pstm = unaConexion.prepareStatement(sqlInsert);
             pstm.setLong(1, idProductor);
             rs = pstm.executeQuery();

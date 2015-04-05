@@ -46,7 +46,7 @@ public class ProductoDao {
         ArrayList<ProductoDto> misProductos = null;
         sqlTemp = "SELECT p.idProducto, p.Nombres, p.idCategoria, p.Imagen FROM productos as p "
                 + "JOIN productosasociados as pa on (p.idProducto = pa.idProducto) "
-                + "JOIN usuarios as u on (u.idUsuario = pa.idProductor) WHERE u.idUsuario = ?";
+                + "JOIN usuarios as u on (u.idUsuario = pa.idProductor) WHERE u.idUsuario = ? AND pa.Estado = 1";
         try {
             pstm = unaConexion.prepareStatement(sqlTemp);
             pstm.setLong(1, idUsuario);
@@ -59,6 +59,36 @@ public class ProductoDao {
                 productoTemp.setNombre(rs.getString("Nombres"));
                 productoTemp.setIdCategoria(rs.getInt("idCategoria"));
                 productoTemp.setImagen(rs.getString("Imagen"));
+                misProductos.add(productoTemp);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error, detalle: " + ex.getMessage());
+        }
+        return misProductos;
+    }
+
+    public List obtenerProductosPedidosPoridProductor(long idProductor, Connection unaConexion) {
+        ArrayList<ProductoDto> misProductos = null;
+        sqlTemp = "SELECT p.idProducto, p.Nombres, idCategoria, p.Imagen, ROUND(((i.Cantidad - o.Cantidad) / i.Cantidad) * 100) as rt "
+                + "FROM productos as p "
+                + "JOIN productosasociados as pa on (p.idProducto = pa.idProducto) "
+                + "JOIN ofertas as o ON (o.idProductoAsociado = pa.idProductoAsociado) "
+                + "JOIN pedidos as pe ON (pe.idOferta = o.idOferta) "
+                + "JOIN inventario as i ON (i.idOferta = o.idOferta) "
+                + "JOIN usuarios as u ON (u.idUsuario = pa.idProductor) "
+                + "WHERE u.idUsuario = ? AND pe.idEstado = 1";
+        try {
+            pstm = unaConexion.prepareStatement(sqlTemp);
+            pstm.setLong(1, idProductor);
+            rs = pstm.executeQuery();
+
+            misProductos = new ArrayList();
+            while (rs.next()) {
+                ProductoDto productoTemp = new ProductoDto();
+                productoTemp.setIdProducto(rs.getInt("idProducto"));
+                productoTemp.setNombre(rs.getString("Nombres"));
+                productoTemp.setIdCategoria(rs.getInt("idCategoria"));
+                productoTemp.setImagen(rs.getString("rt"));
                 misProductos.add(productoTemp);
             }
         } catch (SQLException ex) {
@@ -88,9 +118,8 @@ public class ProductoDao {
         }
         return productoTemp;
     }
-    
+
     public String obtenerNombreCategoriaPorIdPA(int idProductoAsociado, Connection unaConexion) {
-        ProductoDto productoTemp = null;
         sqlTemp = "SELECT concat(p.Nombres, ' <strong>(', c.Descripcion, ')</strong>') as NombreCategoria FROM productos as p JOIN categorias as c on (p.idCategoria = c.idCategoria) JOIN productosAsociados as pa on (pa.idProducto = p.idProducto) WHERE idProductoAsociado = ?";
         try {
             pstm = unaConexion.prepareStatement(sqlTemp);
@@ -101,7 +130,29 @@ public class ProductoDao {
                 mensaje = rs.getString("NombreCategoria");
             }
         } catch (SQLException ex) {
-            mensaje = ex.getMessage();            
+            mensaje = ex.getMessage();
+        }
+        return mensaje;
+    }
+
+    public String obtenerNombreCategoriaPorIdOferta(int idOferta, Connection unaConexion) {
+        sqlTemp = "SELECT concat(p.Nombres, ' <strong>(', c.Descripcion, ')</strong>') as NombreCategoria "
+                + "FROM productos as p "
+                + "JOIN categorias as c on (p.idCategoria = c.idCategoria) "
+                + "JOIN productosasociados as pa on (pa.idProducto = p.idProducto) "
+                + "JOIN ofertas as o ON (o.idProductoAsociado = pa.idProductoAsociado) "
+                + "JOIN pedidos as pe ON (pe.idOferta = o.idOferta) "
+                + "WHERE o.idOferta = ?";
+        try {
+            pstm = unaConexion.prepareStatement(sqlTemp);
+            pstm.setLong(1, idOferta);
+            rs = pstm.executeQuery();
+
+            while (rs.next()) {
+                mensaje = rs.getString("NombreCategoria");
+            }
+        } catch (SQLException ex) {
+            mensaje = ex.getMessage();
         }
         return mensaje;
     }
@@ -144,4 +195,22 @@ public class ProductoDao {
         return mensaje;
     }
 
+    public String obtenerImagenPorIdPA(int idProductoAsociado, Connection unaConexion) {
+        sqlTemp = "SELECT Imagen FROM productos as p "
+                + "JOIN productosasociados as pa on (p.idProducto = pa.idProducto) "
+                + "JOIN ofertas as o on (o.idProductoAsociado = pa.idProductoAsociado) "
+                + "WHERE o.idProductoAsociado = ?";
+        try {
+            pstm = unaConexion.prepareStatement(sqlTemp);
+            pstm.setLong(1, idProductoAsociado);
+            rs = pstm.executeQuery();
+
+            while (rs.next()) {
+                mensaje = rs.getString("Imagen");
+            }
+        } catch (SQLException ex) {
+            mensaje = ex.getMessage();
+        }
+        return mensaje;
+    }
 }

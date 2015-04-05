@@ -24,7 +24,7 @@
                 ciudades = (ArrayList<CiudadDto>) faUsu.obtenerCiudadesPorDepartamento(Integer.parseInt(request.getParameter("idDepartamento")));
                 if (ciudades.size() > 0) {
                     for (CiudadDto cDatos : ciudades) {
-                        out.write("<option value = " + cDatos.getIdCiudad() + ">" + cDatos.getNombre() + "</option>");
+                        out.print("<option value = " + cDatos.getIdCiudad() + ">" + cDatos.getNombre() + "</option>");
 
                     }
                 }

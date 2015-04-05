@@ -143,7 +143,6 @@ function getOferta(idOferta, nombreProducto) {
     xmlHttp.onreadystatechange = resultadoOferta;
     xmlHttp.open("GET", url, true);
     xmlHttp.send(null);
-
 }
 
 function resultadoOferta() {

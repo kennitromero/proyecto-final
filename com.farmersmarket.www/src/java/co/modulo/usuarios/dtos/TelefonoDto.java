@@ -9,7 +9,7 @@ package co.modulo.usuarios.dtos;
 public class TelefonoDto {
 
     private long idUsuario = 0;
-    private long numero = 0;
+    private String numero = "";
 
     @Override
     public String toString() {
@@ -33,14 +33,14 @@ public class TelefonoDto {
     /**
      * @return the numero
      */
-    public long getNumero() {
+    public String getNumero() {
         return numero;
     }
 
     /**
      * @param numero the numero to set
      */
-    public void setNumero(long numero) {
+    public void setNumero(String numero) {
         this.numero = numero;
     }
 }

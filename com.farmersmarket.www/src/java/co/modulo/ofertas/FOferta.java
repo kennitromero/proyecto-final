@@ -78,11 +78,22 @@ public class FOferta {
     }
 
     //Consultas Por Un criterio (Usuario)
-    public List obtenerOfertasProducto(long idProductor) {
+    public List obtenerOfertasProductor(long idProductor) {
         return ofDao.obtenerOfertasPorProductor(idProductor, miConexion);
     }
 
     //Consultas Por un Criterio (Ofertas)
+    public String obtenerOfertasActivasProductor(long idProductor) {
+        return ofDao.obtenerNumeroDeOfertasActivasProductor(idProductor, miConexion);
+    }
+    
+    public String obtenerNombreCategoriaProductoPorOferta(int idOferta) {
+        return pDao.obtenerNombreCategoriaPorIdOferta(idOferta, miConexion);
+    }
+    public List obtenerOfertas() {
+        return ofDao.obtenerOfertas(miConexion);
+    }
+    
     public int obtenerDiasCaducacionOferta(int idOferta) {
         return ofDao.calcularCaducacionOferta(idOferta, miConexion);
     }
@@ -95,6 +106,10 @@ public class FOferta {
         return ofDao.validarProductoPublicado(idProductoAsociado, miConexion);
     }
     
+    public boolean validarOfertaPedida(int idOferta) {
+        return ofDao.validarOfertaPedida(idOferta, miConexion);
+    }
+    
     public int obtenerCuposOferta(long idProductor) {
         return ofDao.obtenerCuposParaOfertar(idProductor, miConexion);
     }
@@ -104,8 +119,16 @@ public class FOferta {
     }
 
     //Consultas Por Un Criterio (Produtos)
+    public List obtenerProductosPedidos(long idProductor) {
+        return pDao.obtenerProductosPedidosPoridProductor(idProductor, miConexion);
+    }
+    
     public List obtenerTodosLosProductos() {
         return pDao.obtenerProductos(miConexion);
+    }
+    
+    public String obtenerImagenDeProductoPorIDPA(int idProductoAsociado) {
+        return pDao.obtenerImagenPorIdPA(idProductoAsociado, miConexion);
     }
 
     public String obNombreCategoriaPorIDPA(int idProductoAsociado) {
@@ -156,6 +179,10 @@ public class FOferta {
     }
     
     //Actualizaciones de registros
+    public String actualizarEstadoOferta(int idOferta, int nuevoEstado) {
+        return ofDao.actualizarEstadoOferta(idOferta, nuevoEstado, miConexion);
+    }
+    
     public String actualizarOferta(OfertaDto ediOferta) {
         return ofDao.updateOferta(ediOferta, miConexion);
     }

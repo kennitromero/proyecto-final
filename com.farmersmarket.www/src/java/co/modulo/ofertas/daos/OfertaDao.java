@@ -27,6 +27,32 @@ public class OfertaDao {
     String sqlTemp = "";
     boolean poder = false;
     
+    public List obtenerOfertas(Connection unaConexion) {
+        ArrayList<OfertaDto> misOfertas = null;
+        sqlTemp = "SELECT `idOferta`, `idProductoAsociado`, `PrecioVente`, date_format(FechaInicio,'%W %d de %M de %Y') as FechaInicio, `FechaFin`, `Cantidad`, `idPromocion`, `idEstadoOferta` FROM `ofertas` WHERE idEstadoOferta = 1 ORDER BY `FechaInicio`";
+        try {
+            pstm = unaConexion.prepareStatement(sqlTemp);            
+            rs = pstm.executeQuery();
+
+            misOfertas = new ArrayList();
+            while (rs.next()) {
+                OfertaDto temp = new OfertaDto();
+                temp.setIdOferta(rs.getInt("idOferta"));
+                temp.setIdProductoAsociado(rs.getInt("idProductoAsociado"));
+                temp.setPrecioCompra(rs.getFloat("PrecioVente"));
+                temp.setFechaInicio(rs.getString("FechaInicio"));
+                temp.setFechaFin(rs.getString("FechaFin"));
+                temp.setCantidadDisponible(rs.getFloat("Cantidad"));
+                temp.setIdPromocion(rs.getInt("idPromocion"));
+                temp.setEstado(rs.getInt("idEstadoOferta"));
+                misOfertas.add(temp);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error, detalle: " + ex.getMessage());
+        }
+        return misOfertas;
+    }
+    
     public OfertaDto obtenerOfertaPorId(int idOferta, Connection unaConexion) {
         OfertaDto temp = new OfertaDto();
         sqlTemp = "SELECT idOferta, idProductoAsociado, PrecioVente, FechaInicio, FechaFin, Cantidad, idPromocion, idEstadoOferta FROM ofertas "
@@ -54,10 +80,10 @@ public class OfertaDao {
 
     public List obtenerOfertasPorProductor(long idProductor, Connection unaConexion) {
         ArrayList<OfertaDto> misOfertas = null;
-        sqlTemp = "SELECT o.idOferta, o.idProductoAsociado, o.PrecioVente, o.FechaInicio, "
+        sqlTemp = "SELECT o.idOferta, o.idProductoAsociado, o.PrecioVente, date_format(o.FechaInicio,'%W %d de %M de %Y') as FechaInicio, "
                 + "o.FechaFin, o.Cantidad, o.idPromocion, o.idEstadoOferta FROM ofertas as o "
                 + "JOIN productosasociados as pa on (o.idProductoAsociado = pa.idProductoAsociado) "
-                + "JOIN usuarios as u on (u.idUsuario = pa.idProductor) WHERE u.idUsuario = ?";
+                + "JOIN usuarios as u on (u.idUsuario = pa.idProductor) WHERE u.idUsuario = ? ORDER BY idEstadoOferta ASC";
         try {
             pstm = unaConexion.prepareStatement(sqlTemp);
             pstm.setLong(1, idProductor);
@@ -200,7 +226,7 @@ public class OfertaDao {
     public int calcularCaducacionOferta(int idOferta, Connection unaConexion) {
         try {
             //1- idProductoAsociado 2- PrecioVenta 3- Cantidad 4- idPromocion 5- idEstado
-            String sqlInsert = "SELECT DATEDIFF(FechaFin, FechaInicio) as Diferencia from ofertas WHERE idOferta = ?";
+            String sqlInsert = "SELECT DATEDIFF(FechaFin, now()) as Diferencia from ofertas WHERE idOferta = ?";
             pstm = unaConexion.prepareStatement(sqlInsert);
 
             pstm.setInt(1, idOferta);
@@ -257,5 +283,68 @@ public class OfertaDao {
             mensaje = "Error, detalle " + sqle.getMessage();
         }
         return rtdo;
+    }
+    
+    public String actualizarEstadoOferta(int idOferta, int nuevoEstado, Connection unaConexion) {
+        try {
+            //1-PrecioVente | 2-Cantidad | 3-idOferta
+            String sqlInsert = "UPDATE ofertas as o SET o.idEstadoOferta = ? WHERE o.idOferta = ?";
+            pstm = unaConexion.prepareStatement(sqlInsert);
+
+            pstm.setInt(1, nuevoEstado);
+            pstm.setInt(2, idOferta);
+
+            rtdo = pstm.executeUpdate();
+
+            if (rtdo != 0) {
+                mensaje = "ok";
+            } else {
+                mensaje = "okno";
+            }
+        } catch (SQLException sqle) {
+            mensaje = "Error, detalle " + sqle.getMessage();
+        }
+        return mensaje;
+    }
+    
+    public boolean validarOfertaPedida(int idOferta, Connection unaConexion) {
+        try {
+            String sqlInsert = "SELECT count(idOferta) as Cantidad FROM pedidos WHERE idOferta = ? AND idEstado = 1";            
+            pstm = unaConexion.prepareStatement(sqlInsert);
+            pstm.setLong(1, idOferta);
+            rs = pstm.executeQuery();
+
+            while (rs.next()) {
+                rtdo = rs.getInt("Cantidad");
+            }
+
+            if (rtdo == 0) {
+                poder = true;
+            }
+        } catch (SQLException sqle) {
+            mensaje = "Error, detalle " + sqle.getMessage();
+        }
+        return poder;
+    }
+    
+    public String obtenerNumeroDeOfertasActivasProductor(long idProductor, Connection unaConexion) {
+        try {
+            sqlTemp = "SELECT count(idOferta) as Salida FROM ofertas as o "
+                    + "JOIN productosasociados as pa ON (pa.idProductoAsociado = o.idProductoAsociado) "
+                    + "JOIN usuarios as u ON (u.idUsuario = pa.idProductor) "
+                    + "WHERE u.idUsuario = ? AND idEstadoOferta = 1";
+            pstm = unaConexion.prepareStatement(sqlTemp);
+
+            pstm.setLong(1, idProductor);
+
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                mensaje = rs.getString("Salida");
+            }
+
+        } catch (SQLException sqle) {
+            mensaje = "Error, detalle " + sqle.getMessage();
+        }
+        return mensaje;
     }
 }

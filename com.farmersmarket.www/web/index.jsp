@@ -18,7 +18,13 @@
     rolesActuales = (ArrayList<RolDto>) miSesionRoles.getAttribute("roles");
 
     if (actualUsuario != null || rolesActuales != null) {
-        response.sendRedirect("pages/indexp.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Ups!</strong> No cerró sesión adecuadamente.&tipoAlert=danger");
+        for (RolDto r : rolesActuales) {
+            if (r.getIdRol() == 1) {
+                response.sendRedirect("pages/indexp.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Ups!</strong> No cerró sesión adecuadamente.&tipoAlert=danger");
+            } else if (r.getIdRol() == 2) {
+                response.sendRedirect("pages/indexc.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Ups!</strong> No cerró sesión adecuadamente.&tipoAlert=danger");
+            }
+        }        
     } else {
 %>
 <!DOCTYPE html>
@@ -34,22 +40,48 @@
         <script type="text/javascript" src="js/validacionesAjax.js"></script>
         <script type="text/javascript" src="js/ajax.js"></script>
         <title>Inicio | Farmer's Market</title>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#mensaje").fadeOut(7500);
+            });
+        </script>
     </head>
     <body>
         <div class="container">
             <!-- Banner Farmer's Market -->
             <div class="row">
                 <div class="col-md-12">
-                    <a href="index.jsp"><img src="img/banner.jpg" alt="Banner de Farmer's Market"></a>
+                    <nav class="navbar navbar-default">
+                        <div class="container-fluid">
+                            <a class="navbar-brand" id="brandfm" href="index.jsp">Farmer's Market</a>                                               
+                            <!-- Collect the nav links, forms, and other content for toggling -->
+                            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">                            
+                                <form class="navbar-form navbar-right" method="POST" action="GestionSesiones">
+                                    <div class="form-group">                                        
+                                        <input type="text" class="form-control" id="isDocumento" value="1102867002"
+                                               name="isDocumento" maxlength="10" placeholder="Ingrese su documento">
+                                    </div>
+                                    <div class="form-group">                                        
+                                        <input type="password" class="form-control" id="isClave" value="mark42" 
+                                               name="isClave" placeholder="Ingrese su contraseña">
+                                    </div>
+                                    <div class="checkbox">
+                                        <label><a href="#" class="a" data-toggle="modal" data-target="#modalRecuperarClave">¿Olvido su contraseña?</a></label>
+                                    </div>
+                                    <input type="submit" name="botonIniciar" class="btn btn-default" value="Entrar">
+                                </form>                                                                
+                            </div>
+                        </div>
+                    </nav>
                 </div>
-            </div>
+            </div>                
             <!-- Fin del Banner  -->            
 
             <!-- Mensajes de alertas -->
             <%
                 if (request.getParameter("msg") != null && request.getParameter("tipoAlert") != null) {
             %>
-            <div class="alert alert-<%= request.getParameter("tipoAlert")%>" role="alert">
+            <div class="alert alert-<%= request.getParameter("tipoAlert")%>" role="alert" id="mensaje">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -127,27 +159,61 @@
                             que se ven en la cadena de comercialización agricola que se
                             vive en Colombia.
                         </p>
-
+                        <br><br>
                         <p class="text-center text-success">
                             <mark>¿Quieres hacerte parte de la comunidad?<br> ¿Qué estás esperando?</mark>
                         </p>
                         <br>
-                        <p>
+                        <center>
                             <a href="#" class="btn btn-success" role="button" data-toggle="modal" data-target="#modalRegistrarse">Registrárse en Farmer's Market</a>
-                            <a href="#" class="btn btn-primary" role="button" data-toggle="modal" data-target="#modalIniciarSesion">Iniciar Sesión</a>                            
-                        </p>
+                        </center>
                     </div>
                 </div>
                 <!-- Fin de contenedor de la derecha - Page Header -->
             </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="media">
+                        <div class="media-left">
+                            <a href="#">
+                                <img class="media-object" src="img/productorcirculo.png" width="100" alt="...">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">¿Eres un productor?</h4>
+                            <p class="text-justify">
+                                Este el sitio perfecto para ti, con apróximadamente <span class="badge">88</span> productos que puedes ofertar dentro del sitio.
+                                Además de eso contarás con la visualización de un top de los primeros dos (2) productos que más se venden dentro del sistema, para que estés al día en todo momento.
+                            </p>                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="media">
+                        <div class="media-left">
+                            <a href="#">
+                                <img class="media-object" src="img/clientecirculo.png" width="100" alt="...">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">¿Eres un cliente?</h4>
+                            <p class="text-justify">
+                                Este el sitio perfecto para ti, con apróximadamente <span class="badge">88</span> productos que puedes ofertar dentro del sitio.
+                                Además de eso contarás con la visualización de un top de los primeros dos (2) productos que más se venden dentro del sistema, para que estés al día en todo momento.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <br>
             <!-- Footer (Nota: Escribir el código que permita que esto quede abajo fijo) -->
-            <div class="row">
+            <div class="row" >
                 <div class="col-md-12">
                     <!-- Footer (Nota: Escribir el código que permita que esto quede abajo fijo) -->
                     <ol class="breadcrumb container-fluid">
-                        <em class="text-center">Todos los derechos reservados / <a href="http://getbootstrap.com/">Bootstrap</a> / <a href="http://fortawesome.github.io/Font-Awesome/">Font-Awesome</a> / <a href="http://jquery.com/">JQuery</a></em>
-                        <em class="pull-right"><a href="#" data-toggle="modal" data-target="#modalContactenos">Contactar un Administrador</a></em>
+                        <em class="text-center"><span class="a">Todos los derechos reservados</span> / <a href="http://getbootstrap.com/" class="a" >Bootstrap</a> / <a class="a" href="http://fortawesome.github.io/Font-Awesome/">Font-Awesome</a> / <a class="a" href="http://jquery.com/">JQuery</a></em>
+                        <em class="pull-right"><a href="#" class="a" data-toggle="modal" data-target="#modalContactenos">Contactar un Administrador</a></em>
                     </ol>
 
                 </div>

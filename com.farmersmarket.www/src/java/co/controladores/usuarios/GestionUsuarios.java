@@ -4,6 +4,7 @@ import co.utilidades.Correo;
 import co.modulo.usuarios.FUsuario;
 import co.modulo.usuarios.dtos.ContactoDto;
 import co.modulo.usuarios.dtos.RolDto;
+import co.modulo.usuarios.dtos.TelefonoDto;
 import co.modulo.usuarios.dtos.UsuarioDto;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -100,8 +101,7 @@ public class GestionUsuarios extends HttpServlet {
                 } else {
                     response.sendRedirect("pages/" + viene + ".jsp?msg=<strong>¡Contraseña Antigua Incorrecta!</strong> Por favor, Intente de nuevo <i class='glyphicon glyphicon-remove'></i>&tipoAlert=danger");
                 }
-            }
-            
+            }            
             //Envío de Formulairo de Contáctenos :3
         } else if (request.getParameter("mcEnviar") != null && request.getParameter("mcEnviar").equals("ok")) {
             ContactoDto nuevoMensajeContacto = new ContactoDto();
@@ -144,11 +144,57 @@ public class GestionUsuarios extends HttpServlet {
             } else {
                 response.sendRedirect("index.jsp?msg=<strong>¡No existe! <i class='glyphicon glyphicon-remove'></i></strong> Correo no registrado, <strong> Lo inventamos a registrárse</strong>&tipoAlert=info");
             }
-        }
+            //Registro de telefonos
+        } else if (request.getParameter("rnEnviar") != null) {
+            long idUsuario = Long.parseLong(request.getParameter("rnEnviar"));
+            String nuevoNumero = request.getParameter("rnNumero");
+            
+            TelefonoDto nuevoTelefono = new TelefonoDto();
+            nuevoTelefono.setIdUsuario(idUsuario);
+            nuevoTelefono.setNumero(nuevoNumero);
+            
+            salida = faUsu.registrarTelefono(nuevoTelefono);
+            
+            if (salida.equals("ok")) {
+                response.sendRedirect("pages/perfil.jsp?msg=<strong>¡Registro Éxitoso! <i class='glyphicon glyphicon-ok'></i></strong> El número quedó registrado a su cuenta.&tipoAlert=success");
+            } else if (salida.equals("okno")) {
+               response.sendRedirect("pages/perfil.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Algo salió mal!</strong> Por favor intentelo de nuevo.&tipoAlert=warning");
+            } else {
+               response.sendRedirect("pages/perfil.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Ocurrió un error!</strong> Detalle: " + salida + "&tipoAlert=danger");
+            }
+            //Eliminación de telefonos
+        } else if (request.getParameter("op") != null && request.getParameter("op").equals("elite")) {
+            String numero = request.getParameter("num");
+            salida = faUsu.eliminarNUmeroTelefono(numero);
+            
+            if (salida.equals("ok")) {
+                response.sendRedirect("pages/perfil.jsp?msg=<strong>¡Se eliminó correctamente! <i class='glyphicon glyphicon-ok'></i></strong> El número se eliminó de su cuenta.&tipoAlert=info");
+            } else if (salida.equals("okno")) {
+               response.sendRedirect("pages/perfil.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Algo salió mal!</strong> Por favor intentelo de nuevo.&tipoAlert=warning");
+            } else {
+               response.sendRedirect("pages/perfil.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Ocurrió un error!</strong> Detalle: " + salida + "&tipoAlert=danger");
+            }
+        } else if (request.getParameter("auEnviar") != null && request.getParameter("auEnviar").equals("ok")) {
+            UsuarioDto ediUsuario = new UsuarioDto();
+            ediUsuario.setIdUsuario(Long.parseLong(request.getParameter("auDocumento")));
+            ediUsuario.setNombres(request.getParameter("auNombres"));
+            ediUsuario.setApellidos(request.getParameter("auApellidos"));            
+            ediUsuario.setCorreo(request.getParameter("auCorreo"));            
+            ediUsuario.setDireccion(request.getParameter("auDireccion"));                        
 
+            salida = faUsu.actualizarUsuario(ediUsuario);            
+            
+
+            if (salida.equals("ok")) {
+                response.sendRedirect("pages/perfil.jsp?msg=<strong><i class='glyphicon glyphicon-ok'></i> ¡Registro Éxitoso!</strong> Revise su correo para activar cuenta, puede iniciar sesión.&tipoAlert=success");
+            } else if (salida.equals("okno")) {
+                response.sendRedirect("pages/perfil.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Algo salió mal!</strong> Por favor intentelo de nuevo.&tipoAlert=warning");
+            } else {
+                response.sendRedirect("pages/perfil.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Ocurrió un error!</strong> Detalle: " + salida + "&tipoAlert=danger");
+            }
+        }
         request.setCharacterEncoding("UTF-8");
     }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

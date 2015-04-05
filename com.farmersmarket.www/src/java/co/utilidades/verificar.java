@@ -3,8 +3,11 @@ package co.utilidades;
 import co.modulo.ofertas.FOferta;
 import co.modulo.ofertas.daos.ProductoDao;
 import co.modulo.ofertas.dtos.ProductoDto;
+import co.modulo.pedidos.FPedido;
+import co.modulo.pedidos.dtos.PedidoDto;
 import co.modulo.usuarios.FUsuario;
 import co.modulo.usuarios.dtos.RolDto;
+import co.modulo.usuarios.dtos.TelefonoDto;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,22 +27,42 @@ public class verificar {
 
         FUsuario faUsu = new FUsuario();
         FOferta faOfer = new FOferta();
+        FPedido faPe = new FPedido();
         
-        System.out.println(faOfer.obtenerNumeroDeProductosAsociadosPorProducto(64569185));
-//
+        System.out.println(faPe.cambiarEstadoPedido(24, 1));
+        
+//        PedidoDto np = new PedidoDto();
+//        np.setIdOferta(30);
+//        np.setIdCliente(1111111111);
+//        np.setPrecioTotalFinal(102300);
+//        np.setCantidadPedido(450);
+//        
+//        System.out.println(faPe.registrarPedido(np));
+
+//        ArrayList<TelefonoDto> misNumeros;
+//        misNumeros = (ArrayList<TelefonoDto>) faUsu.obtenerNumerosPorId(1102867002);
+//        for (TelefonoDto t : misNumeros) {
+//            System.out.println(t.getNumero());
+//        }
+//        TelefonoDto nt = new TelefonoDto();
+//        nt.setIdUsuario(1102867002);
+//        nt.setNumero("3045652958");
+//        
+//        System.out.println(faUsu.registrarTelefono(nt));
+//        
+//        System.out.println(faOfer.obtenerNumeroDeProductosAsociadosPorProducto(64569185));
+////
 //        System.out.println("----------------------------");
 //        
 
 //        ArrayList<ProductoDto> prods = (ArrayList<ProductoDto>) faOfer.obtenerTodosLosProductos();
 //
 //        System.out.println(faOfer.ponerImagenesProductos(prods));
-        
 //        ArrayList<ProductoDto> misProductos = (ArrayList<ProductoDto>) faOfer.obtenerTodosLosProductos();
 //        
 //        for (ProductoDto p : misProductos) {
 //            System.out.println(p);
 //        }
-
           //      ArrayList<RolDto> roles;
 //        roles = faUsu.obtenerRolesPorUsuario(64569185);
 //        
@@ -47,22 +70,22 @@ public class verificar {
 //            System.out.println(r);
 //        }
 //        
-        //        
-        //        ProductoDao pdao = new ProductoDao();
-        //        
-        //        ArrayList<ProductoDto> listProductos = (ArrayList<ProductoDto>) pdao.obtenerProductos();
-        //        
-        //        for (ProductoDto p : listProductos) {
-        //            System.out.println(p);
-        //        }
-        //        
-        //        System.out.println("-------------------------------------------");
-        //        DepartamentoDao dao = new DepartamentoDao();
-        //        ArrayList<DepartamentoDto> listad = (ArrayList<DepartamentoDto>) dao.obtenerDepartamentos();
-        //        
-        //        for (DepartamentoDto d : listad) {
-        //            System.out.println(d);
-        //        }
+            //        
+            //        ProductoDao pdao = new ProductoDao();
+            //        
+            //        ArrayList<ProductoDto> listProductos = (ArrayList<ProductoDto>) pdao.obtenerProductos();
+            //        
+            //        for (ProductoDto p : listProductos) {
+            //            System.out.println(p);
+            //        }
+            //        
+            //        System.out.println("-------------------------------------------");
+            //        DepartamentoDao dao = new DepartamentoDao();
+            //        ArrayList<DepartamentoDto> listad = (ArrayList<DepartamentoDto>) dao.obtenerDepartamentos();
+            //        
+            //        for (DepartamentoDto d : listad) {
+            //            System.out.println(d);
+            //        }
 //        PreparedStatement pstm;
 //        int rtdo = 0;        
 //        String mensaje;        
@@ -125,6 +148,6 @@ public class verificar {
 //        } else {
 //            System.out.println("No puede eliminar");
 //        }
-    }
+        }
 
-}
+    }

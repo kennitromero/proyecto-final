@@ -18,7 +18,6 @@ import co.modulo.usuarios.dtos.TelefonoDto;
 import co.modulo.usuarios.dtos.UsuarioDto;
 import co.modulo.usuarios.daos.ContactoDao;
 import co.modulo.usuarios.dtos.ContactoDto;
-import co.utilidades.Conexion;
 import co.utilidades.ConexionEscritorio;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -85,15 +84,38 @@ public class FUsuario {
     public String registrarFormularioDeContactenos(ContactoDto nuevoRegistroContacto) {
         return conDao.insertContactenos(nuevoRegistroContacto, miConexion);
     }
+    
+    public String registrarTelefono(TelefonoDto nuevoTelefono) {
+        return tDao.insertTelefono(nuevoTelefono, miConexion);
+    }        
 
     //Actualizaciones realizadas a la base de datos (Usuario)
+    public String actualizarUsuario(UsuarioDto ediUsuario) {
+        return uDao.actualizarUsuarioParaUsuario(ediUsuario, miConexion);
+    }
     public String cambiarContrasena(String nuevaClave, long documento) {
         return uDao.actualizarClave(nuevaClave, documento, miConexion);
     }
 
-    //Consultas Por Un Criterio (Usuario) 
+    //Consultas Por Un Criterio (Usuario)
+    public String obtenerNombrePorId(long idUsuario) {
+        return uDao.obtenerNombresPorId(idUsuario, miConexion);
+    }
+    
     public String obtenerCorreoPorDocumento(long documento) {
         return uDao.obtenerCorreoPorId(documento, miConexion);
+    }
+    
+    public String obtenerCorreoProductorPorPedido(int idPedido) {
+        return uDao.obtenerCorreoProductorPorPedido(idPedido, miConexion);
+    }
+    
+    public String obtenerNombreProductorPorIdProductoAsociado(int idProductoAsociado) {
+        return uDao.obtenerNombrePorProductoAsociado(idProductoAsociado, miConexion);
+    }
+    
+    public String obtenerNombreProductorPorIdOferta(int idOferta) {
+        return uDao.obtenerNombrePorOferta(idOferta, miConexion);
     }
     
     public StringBuilder validarExistenciaDocumento(long documento) {
@@ -132,5 +154,18 @@ public class FUsuario {
     
     public List obtenerCiudadesPorDepartamento(int idDepartamento) {
         return ciDao.obtenerCiudadesPorId(idDepartamento, miConexion);
+    }
+    
+    public String obtenerNombrePorIdCiudad(int idCiudad) {
+        return ciDao.obtenerNombrePorId(idCiudad, miConexion);
+    }
+    
+    //Consultas por criterio (Telefonos)
+    public List obtenerNumerosPorId(long idUsuario) {
+        return tDao.obtenerTelefonosPorId(idUsuario, miConexion);
+    }
+    
+    public String eliminarNUmeroTelefono(String numero) {
+        return tDao.eliminarTelefono(numero, miConexion);
     }
 }

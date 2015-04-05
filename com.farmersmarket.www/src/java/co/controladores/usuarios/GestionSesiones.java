@@ -50,8 +50,6 @@ public class GestionSesiones extends HttpServlet {
                 UsuarioDto usuario;
 
                 usuario = faUsu.validarLaSesion(documento);
-                
-                
 
                 if (usuario.getClave().equals("")) {
                     response.sendRedirect("index.jsp?msg=<strong><i class='glyphicon glyphicon-remove'></i> ¡USUARIO NO EXISTE!</strong> Intente nuevamente.&tipoAlert=warning");
@@ -61,33 +59,38 @@ public class GestionSesiones extends HttpServlet {
 
                     UsuarioDto queryPersona;
                     queryPersona = faUsu.obtenerUsuarioPorDocumento(usuario.getIdUsuario());
-                    miSesion.setAttribute("usuarioEntro", queryPersona);                    
 
-                    ArrayList<RolDto> rolesActual;
-                    rolesActual = faUsu.obtenerRolesPorUsuario(documento);
-                    out.print(rolesActual);
-                    rolesUsuario.setAttribute("roles", rolesActual);
+                    if (queryPersona.getEstado() == 3) {
+                        response.sendRedirect("index.jsp?msg=<strong><i class='glyphicon glyphicon-exclamation-sign'></i> ¡Ups!</strong> Usted ha sido bloqueado, contacte a un administrador.&tipoAlert=info");
+                    } else {
+                        miSesion.setAttribute("usuarioEntro", queryPersona);
 
-                    boolean paraProductor = false;
-                    boolean paraCliente = false;
-                    boolean paraAdmin = false;
+                        ArrayList<RolDto> rolesActual;
+                        rolesActual = faUsu.obtenerRolesPorUsuario(documento);
+                        out.print(rolesActual);
+                        rolesUsuario.setAttribute("roles", rolesActual);
 
-                    for (RolDto r : rolesActual) {
-                        if (r.getIdRol() == 1) {
-                            paraProductor = true;
-                        } else if (r.getIdRol() == 2) {
-                            paraCliente = true;
-                        } else if (r.getIdRol() == 3) {
-                            paraAdmin = true;
+                        boolean paraProductor = false;
+                        boolean paraCliente = false;
+                        boolean paraAdmin = false;
+
+                        for (RolDto r : rolesActual) {
+                            if (r.getIdRol() == 1) {
+                                paraProductor = true;
+                            } else if (r.getIdRol() == 2) {
+                                paraCliente = true;
+                            } else if (r.getIdRol() == 3) {
+                                paraAdmin = true;
+                            }
                         }
-                    }
 
-                    if (paraProductor) {
-                        response.sendRedirect("pages/indexp.jsp");
-                    } else if (paraCliente) {
-                        response.sendRedirect("pages/indexc.jsp");
-                    } else if (paraAdmin) {
-                        response.sendRedirect("pages/indexa.jsp");
+                        if (paraProductor) {
+                            response.sendRedirect("pages/indexp.jsp");
+                        } else if (paraCliente) {
+                            response.sendRedirect("pages/indexc.jsp");
+                        } else if (paraAdmin) {
+                            response.sendRedirect("pages/indexa.jsp");
+                        }
                     }
                 } else {
                     response.sendRedirect("index.jsp?msg=<strong><i class='glyphicon glyphicon-remove'></i> ¡CONTRASEÑA INCORRETA!</strong> Intente nuevamente.&tipoAlert=warning");
@@ -95,7 +98,7 @@ public class GestionSesiones extends HttpServlet {
             } else {
                 response.sendRedirect("index.jsp?msg=<strong><i class='glyphicon glyphicon-remove'></i> ¡CAMPOS VACIOS!</strong> Intente nuevamente.&tipoAlert=warning");
             }
-            
+
             //Cerrar sesión en el sistema.
         } else if (request.getParameter("op").equals("salir")) {
             HttpSession miSesion = request.getSession();
@@ -104,7 +107,9 @@ public class GestionSesiones extends HttpServlet {
             response.sendRedirect("index.jsp?msg=<strong>¡Sesión Cerrada Correctamente!</strong> <i class='glyphicon glyphicon-ok'></i>&tipoAlert=info");
         }
     }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+
     /**
      * Handles the HTTP <code>GET</code> method.
      *
